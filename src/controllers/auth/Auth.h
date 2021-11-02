@@ -2,9 +2,10 @@
 
 #include <drogon/drogon.h>
 #include <drogon/HttpController.h>
-#include <jwt-cpp/jwt.h>
+#include <src/utils/jwt/JWT.h>
 
 using namespace drogon;
+using namespace api::utils::jwt;
 namespace api::v1 {
     class Auth : public HttpController<Auth> {
     public:
