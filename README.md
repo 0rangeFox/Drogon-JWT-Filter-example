@@ -33,3 +33,12 @@ make && sudo make install
 
 ### Execute:
 Make an copy of _config.json_ inside to build folder, and make your necessary changes and start the program.
+
+## Frequently Asked Questions (FAQ)
+**Q**: Got an error like this when I executed the `git-submodule.sh`:
+```bash
+./git-submodule.sh: line 1: $'\r': command not found
+./git-submodule.sh: line 11: syntax error near unexpected token `fi'
+'/git-submodule.sh: line 11: `            fi;
+```
+**A**: Execute the following command: ``sed -i 's/\r$//' git-submodule.sh``
