@@ -4,7 +4,7 @@ using namespace api::v1::filters;
 
 void JwtFilter::doFilter(const HttpRequestPtr &request, FilterCallback &&fcb, FilterChainCallback &&fccb) {
     // Skip the verification on method Options
-    if (request->getMethod() == HttpMethod::Options) fccb();
+    if (request->getMethod() == HttpMethod::Options) return fccb();
 
     std::string token = request->getHeader("Authorization");
 
