@@ -6,10 +6,10 @@ void JwtFilter::doFilter(const HttpRequestPtr &request, FilterCallback &&fcb, Fi
     // Skip the verification on method Options
     if (request->getMethod() == HttpMethod::Options) return fccb();
 
-    std::string token = request->getHeader("Authorization");
+    const std::string& token = request->getHeader("Authorization");
 
-    // If authorization header is empty
-    if (token.empty()) {
+    // If the authorization header is empty or if the length is lower than 7 characters, means "Bearer " is not included on authorization header string.
+    if (token.length() < 7) {
         Json::Value resultJson;
         resultJson["error"] = "No header authentication!";
         resultJson["status"] = 0;
@@ -21,10 +21,8 @@ void JwtFilter::doFilter(const HttpRequestPtr &request, FilterCallback &&fcb, Fi
         return fcb(res);
     }
 
-    // Remove the string "Bearer " on token
-    token = token.substr(7);
-
-    std::map<std::string, any> jwtAttributes = JWT::decodeToken(token);
+    // Remove the string "Bearer " on token and decode it
+    std::map<std::string, any> jwtAttributes = JWT::decodeToken(token.substr(7));
     if (jwtAttributes.empty()) {
         Json::Value resultJson;
         resultJson["error"] = "Token is invalid!";
