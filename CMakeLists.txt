@@ -24,8 +24,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 add_executable(${PROJECT_NAME} ${sources})
 
 # ##############################################################################
-add_subdirectory(libraries/drogon)
-add_subdirectory(libraries/jwt-cpp)
+add_subdirectory(libs/drogon)
+add_subdirectory(libs/jwt-cpp)
 target_link_libraries(${PROJECT_NAME} PRIVATE drogon jwt-cpp)
 # ##############################################################################
 

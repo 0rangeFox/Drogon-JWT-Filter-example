@@ -20,8 +20,7 @@ Everything you need to setup this example is [here](https://github.com/an-tao/dr
 ```bash
 git clone https://github.com/0rangeFox/Drogon-JWT-Filter-example.git
 cd Drogon-JWT-Filter-example
-sudo chmod 777 git-submodule.sh
-./git-submodule.sh
+git submodule update --init
 cd libraries/drogon/
 git submodule update --init
 cd ../../
@@ -35,10 +34,5 @@ make && sudo make install
 Make an copy of _config.json_ inside to build folder, and make your necessary changes and start the program.
 
 ## Frequently Asked Questions (FAQ)
-**Q**: Got an error like this when I executed the `git-submodule.sh`:
-```bash
-./git-submodule.sh: line 1: $'\r': command not found
-./git-submodule.sh: line 11: syntax error near unexpected token `fi'
-'/git-submodule.sh: line 11: `            fi;
-```
-**A**: Execute the following command: ``sed -i 's/\r$//' git-submodule.sh``
+* **Q**: When I try to compile this project give me error on CMakeLists telling OpenSSL wasn't found but I have it installed:
+* **A**: The solution is [here](https://github.com/drogonframework/drogon/issues/1161#issuecomment-1019180325).
