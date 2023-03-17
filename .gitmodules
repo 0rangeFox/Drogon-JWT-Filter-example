@@ -1,8 +1,6 @@
-[submodule "libraries/drogon"]
-	path = libraries/drogon
-	url = https://github.com/an-tao/drogon
-	branch = master
-[submodule "libraries/jwt-cpp"]
-	path = libraries/jwt-cpp
+[submodule "libs/drogon"]
+	path = libs/drogon
+	url = https://github.com/drogonframework/drogon.git
+[submodule "libs/jwt-cpp"]
+	path = libs/jwt-cpp
 	url = https://github.com/Thalhammer/jwt-cpp.git
-	branch = master

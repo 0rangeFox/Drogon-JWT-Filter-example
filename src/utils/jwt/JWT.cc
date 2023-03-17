@@ -2,7 +2,7 @@
 
 using namespace api::utils::jwt;
 
-JWT JWT::generateToken(const std::map<std::string, ::jwt::picojson_traits::value_type>& claims, const bool& extension) {
+JWT JWT::generateToken(const std::map<std::string, ::jwt::traits::kazuho_picojson::value_type>& claims, const bool& extension) {
     const auto time = std::chrono::system_clock::now();
 
     // If remember is true, just add more 30 days, otherwise, just put valid only for 1 day.
@@ -28,14 +28,14 @@ JWT JWT::generateToken(const std::map<std::string, ::jwt::picojson_traits::value
 std::map<std::string, any> JWT::decodeToken(const std::string& encodedToken) {
     // Let's decode it, if isn't a valid token of JWT, catch will be called
     try {
-        auto decodedToken = ::jwt::decode(encodedToken);
+        auto decodedToken = ::jwt::decode<::jwt::traits::kazuho_picojson>(encodedToken);
 
         if (verifyToken(decodedToken)) {
             std::map<std::string, any> attributes = {};
 
             // Save the claims on attributes
-            for (auto& claim : decodedToken.get_payload_claims())
-                addClaimToAttributes(attributes, claim);
+            for (auto& claim : decodedToken.get_payload_json())
+                addClaimToAttributes(attributes, { claim.first, decodedToken.get_payload_claim(claim.first) });
 
             return attributes;
         }
@@ -46,7 +46,7 @@ std::map<std::string, any> JWT::decodeToken(const std::string& encodedToken) {
     }
 }
 
-bool JWT::verifyToken(const ::jwt::decoded_jwt<::jwt::picojson_traits>& jwt) {
+bool JWT::verifyToken(const ::jwt::decoded_jwt<::jwt::traits::kazuho_picojson>& jwt) {
     // Let's create a verifier
     auto jwtVerifier = ::jwt::verify()
         .with_issuer(app().getCustomConfig()["jwt"]["issuer"].asString())
@@ -57,18 +57,18 @@ bool JWT::verifyToken(const ::jwt::decoded_jwt<::jwt::picojson_traits>& jwt) {
     try {
         jwtVerifier.verify(jwt);
         return true;
-    } catch(const ::jwt::token_verification_exception& e) {
+    } catch(const ::jwt::error::token_verification_exception& e) {
         return false;
     }
 }
 
-void JWT::addClaimToAttributes(std::map<std::string, any>& attributes, const std::pair<std::string, ::jwt::basic_claim<::jwt::picojson_traits>>& claim) {
+void JWT::addClaimToAttributes(std::map<std::string, any>& attributes, const std::pair<std::string, ::jwt::basic_claim<::jwt::traits::kazuho_picojson>>& claim) {
     switch (claim.second.get_type()) {
         case ::jwt::json::type::boolean:
-            attributes.insert(std::pair<std::string, bool>(claim.first, claim.second.as_bool()));
+            attributes.insert(std::pair<std::string, bool>(claim.first, claim.second.as_boolean()));
             break;
         case ::jwt::json::type::integer:
-            attributes.insert(std::pair<std::string, std::int64_t>(claim.first, claim.second.as_int()));
+            attributes.insert(std::pair<std::string, std::int64_t>(claim.first, claim.second.as_integer()));
             break;
         case ::jwt::json::type::number:
             attributes.insert(std::pair<std::string, double>(claim.first, claim.second.as_number()));
